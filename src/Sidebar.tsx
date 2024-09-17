@@ -4,6 +4,7 @@ import Sheet from "@mui/joy/Sheet";
 import { useCurrentIssueId, useSetCurrentIssueId } from "./store/currentIssue.store";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
+import ParticipantsList from "./ParticipantsList";
 
 export default function Sidebar() {
   const setCurrentIssue = useSetCurrentIssueId();
@@ -38,6 +39,7 @@ export default function Sidebar() {
         <Input value={`facebook/react/issues/${currentIssueId}`} onChange={onIputChange} onFocus={onInputFocus} />
         <FormHelperText id="component-helper-text">Paste a github issue link or id</FormHelperText>
       </FormControl>
+      <ParticipantsList />
     </Sheet>
   );
 }
