@@ -4,37 +4,20 @@ import Stack from "@mui/joy/Stack";
 import Typography from "@mui/joy/Typography";
 import ChatBubble from "./ChatBubble";
 import useFetch from "./useFetch";
+import { Comment, Issue } from "../types/issues.types";
 
-import { useCurrentIssueId } from "./store/currentIssue.store";
-
-type User = {
-  login: string;
-  avatar_url: string;
-};
-
-type Issue = {
-  id: number;
-  created_at: string;
-  user: User;
-
-  number: number;
-  title: string;
-  body: string;
-  comments_url: string;
-};
-
-type Comment = {
-  id: number;
-  created_at: string;
-  user: User;
-
-  body: string;
-};
+import { useCurrentIssueId, useSetIssueParticipants } from "./store/currentIssue.store";
 
 export default function MessagesPane() {
   const currentIssueId = useCurrentIssueId();
+  const setIssueParticipants = useSetIssueParticipants();
+
   const issue = useFetch<Issue>({ url: `https://api.github.com/repos/facebook/react/issues/${currentIssueId}` });
   const comments = useFetch<Comment[]>({ url: issue.data?.comments_url }, { enabled: issue.isFetched });
+
+  if (comments.data) {
+    setIssueParticipants(comments.data);
+  }
 
   return (
     <Sheet
