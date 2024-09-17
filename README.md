@@ -4,6 +4,8 @@ Vous allez devoir contribuer à un petite application Github. Celle-ci sert à v
 
 Pour démarrer le projet il suffit de faire `npm i && npm start`
 
+Si vous atteignez la limitation d'appel de l'api github, vous pouvez utiliser un [personnal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) dans la variable d'environnement VITE_GITHUB_PERSONNAL_TOKEN. Attention à ne jamais commit/push ce token.
+
 Essayez de réaliser un maximum de tâches **en un temps limité à 3 heures**. Il est inutile de chercher à réaliser l'ensemble, on sait qu'il faudrait plus de temps que celui imparti et ce n'est pas le but recherché.
 Lorsqu'on vous aurez terminé, nous attendons recevoir votre code sous forme de lien vers un dépôt Github.
 
