@@ -6,16 +6,19 @@ import ChatBubble from "./ChatBubble";
 import useFetch from "./useFetch";
 import { Comment, Issue } from "../types/issues.types";
 
-import { useCurrentIssueId, useSetIssueParticipants } from "./store/currentIssue.store";
+import { useCurrentIssueId, useHiddenParticipants, useSetIssueParticipants } from "./store/currentIssue.store";
 
 export default function MessagesPane() {
   const currentIssueId = useCurrentIssueId();
   const setIssueParticipants = useSetIssueParticipants();
+  const hiddenParticipants = useHiddenParticipants();
 
   const issue = useFetch<Issue>({ url: `https://api.github.com/repos/facebook/react/issues/${currentIssueId}` });
   const comments = useFetch<Comment[]>({ url: issue.data?.comments_url }, { enabled: issue.isFetched });
 
-  if (comments.data) {
+  const areParticipantCommentsVisible = (comment: Comment) => !hiddenParticipants.includes(comment.user.id);
+
+  if (comments.data && comments.isFetched) {
     setIssueParticipants(comments.data);
   }
 
@@ -66,13 +69,16 @@ export default function MessagesPane() {
       {comments.data && (
         <Stack spacing={2} justifyContent="flex-end" px={2} py={3}>
           <ChatBubble variant="solid" {...issue.data!} />
-          {comments.data.map((comment) => (
-            <ChatBubble
-              key={comment.id}
-              variant={comment.user.login === issue.data!.user.login ? "solid" : "outlined"}
-              {...comment}
-            />
-          ))}
+          {comments.data.map(
+            (comment) =>
+              areParticipantCommentsVisible(comment) && (
+                <ChatBubble
+                  key={comment.id}
+                  variant={comment.user.login === issue.data!.user.login ? "solid" : "outlined"}
+                  {...comment}
+                />
+              )
+          )}
         </Stack>
       )}
     </Sheet>
