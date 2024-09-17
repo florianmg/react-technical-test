@@ -5,6 +5,8 @@ import Typography from "@mui/joy/Typography";
 import ChatBubble from "./ChatBubble";
 import useFetch from "./useFetch";
 
+import { useCurrentIssueId } from "./store/currentIssue.store";
+
 type User = {
   login: string;
   avatar_url: string;
@@ -30,7 +32,8 @@ type Comment = {
 };
 
 export default function MessagesPane() {
-  const issue = useFetch<Issue>({ url: "https://api.github.com/repos/facebook/react/issues/7901" });
+  const currentIssueId = useCurrentIssueId();
+  const issue = useFetch<Issue>({ url: `https://api.github.com/repos/facebook/react/issues/${currentIssueId}` });
   const comments = useFetch<Comment[]>({ url: issue.data?.comments_url }, { enabled: issue.isFetched });
 
   return (
