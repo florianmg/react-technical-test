@@ -2,10 +2,20 @@ import { UndefinedInitialDataInfiniteOptions, useInfiniteQuery } from "@tanstack
 import { parse } from "http-link-header";
 import axios, { AxiosRequestConfig } from "axios";
 
+const githubToken = import.meta.env.VITE_GITHUB_PERSONNAL_TOKEN;
+
 function useFetch<T>(
   config: AxiosRequestConfig,
   options?: Partial<UndefinedInitialDataInfiniteOptions<any, any, any, any, any>>
 ) {
+  // Update the Authorization header with the token only if github token is defined
+  if (githubToken) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `token ${githubToken}`,
+    };
+  }
+
   return useInfiniteQuery({
     ...options,
     queryKey: [config],
