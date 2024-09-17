@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { Participant, Comment } from "../../types/issues.types";
 
 type CurrentIssueStore = {
-  issueId: string;
-  setIssueId: (issue: string) => void;
+  issuePath: string;
+  setIssuePath: (path: string) => void;
   issueParticipants: Participant[];
   setIssueParticipants: (comments: Comment[]) => void;
   hiddenParticipantsIds: number[];
@@ -11,10 +11,11 @@ type CurrentIssueStore = {
 };
 
 const useCurrentIssueStore = create<CurrentIssueStore>((set) => ({
-  issueId: "7901",
-  setIssueId: (issueId) => {
-    set({ issueId, hiddenParticipantsIds: [] });
+  issuePath: "facebook/react/issues/7901",
+  setIssuePath: (path) => {
+    set({ issuePath: path, hiddenParticipantsIds: [], issueParticipants: [] });
   },
+
   issueParticipants: [],
   setIssueParticipants: (comments) => {
     const participants: Participant[] = [];
@@ -39,8 +40,8 @@ const useCurrentIssueStore = create<CurrentIssueStore>((set) => ({
   setHiddenParticipantsIds: (ids) => set({ hiddenParticipantsIds: ids }),
 }));
 
-export const useCurrentIssueId = () => useCurrentIssueStore((state) => state.issueId);
-export const useSetCurrentIssueId = () => useCurrentIssueStore((state) => state.setIssueId);
+export const useIssuePath = () => useCurrentIssueStore((state) => state.issuePath);
+export const useSetIssuePath = () => useCurrentIssueStore((state) => state.setIssuePath);
 
 export const useIssueParticipants = () => useCurrentIssueStore((state) => state.issueParticipants);
 export const useSetIssueParticipants = () => useCurrentIssueStore((state) => state.setIssueParticipants);

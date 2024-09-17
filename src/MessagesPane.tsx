@@ -6,20 +6,52 @@ import ChatBubble from "./ChatBubble";
 import useFetch from "./useFetch";
 import { Comment, Issue } from "../types/issues.types";
 
-import { useCurrentIssueId, useHiddenParticipants, useSetIssueParticipants } from "./store/currentIssue.store";
+import { useHiddenParticipants, useIssuePath, useSetIssueParticipants } from "./store/currentIssue.store";
 
 export default function MessagesPane() {
-  const currentIssueId = useCurrentIssueId();
+  const issuePath = useIssuePath();
   const setIssueParticipants = useSetIssueParticipants();
   const hiddenParticipants = useHiddenParticipants();
 
-  const issue = useFetch<Issue>({ url: `https://api.github.com/repos/facebook/react/issues/${currentIssueId}` });
+  const issue = useFetch<Issue>({ url: `https://api.github.com/repos/${issuePath}` });
   const comments = useFetch<Comment[]>({ url: issue.data?.comments_url }, { enabled: issue.isFetched });
 
-  const areParticipantCommentsVisible = (comment: Comment) => !hiddenParticipants.includes(comment.user.id);
+  const areParticipantCommentsVisible = (comment: Comment): boolean => !hiddenParticipants.includes(comment.user.id);
 
   if (comments.data && comments.isFetched) {
     setIssueParticipants(comments.data);
+  }
+
+  if (issue.isLoading || comments.isLoading) {
+    return (
+      <Sheet
+        sx={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "120px",
+          backgroundColor: "background.level1",
+        }}
+      >
+        <Typography>Loading...</Typography>
+      </Sheet>
+    );
+  }
+
+  if (!issue.data || !comments.data) {
+    return (
+      <Sheet
+        sx={{
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "120px",
+          backgroundColor: "background.level1",
+        }}
+      >
+        <Typography>No issue found. Please check the validity of the URL you provided</Typography>
+      </Sheet>
+    );
   }
 
   return (

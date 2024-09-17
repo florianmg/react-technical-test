@@ -1,23 +1,23 @@
 import Input from "@mui/joy/Input";
 import Sheet from "@mui/joy/Sheet";
 
-import { useCurrentIssueId, useSetCurrentIssueId } from "./store/currentIssue.store";
+import { useIssuePath, useSetIssuePath } from "./store/currentIssue.store";
 import FormControl from "@mui/joy/FormControl";
 import FormHelperText from "@mui/joy/FormHelperText";
 import ParticipantsList from "./ParticipantsList";
 
 export default function Sidebar() {
-  const setCurrentIssue = useSetCurrentIssueId();
-  const currentIssueId = useCurrentIssueId();
+  const issuePath = useIssuePath();
+  const setIssuePath = useSetIssuePath();
 
   const onIputChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-    const issueId = e.currentTarget.value.split("/").pop();
-    if (!issueId) return;
-    setCurrentIssue(issueId);
+    const cleanedPath = e.currentTarget.value.replace("https://github.com/", "");
+    setIssuePath(cleanedPath);
   };
   const onInputFocus: React.FocusEventHandler<HTMLInputElement> = (e) => {
     e.currentTarget.select();
   };
+
   return (
     <Sheet
       className="Sidebar"
@@ -36,7 +36,7 @@ export default function Sidebar() {
       }}
     >
       <FormControl>
-        <Input value={`facebook/react/issues/${currentIssueId}`} onChange={onIputChange} onFocus={onInputFocus} />
+        <Input value={issuePath} onChange={onIputChange} onFocus={onInputFocus} />
         <FormHelperText id="component-helper-text">Paste a github issue link or id</FormHelperText>
       </FormControl>
       <ParticipantsList />
