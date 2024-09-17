@@ -4,7 +4,7 @@ import axios, { AxiosRequestConfig } from "axios";
 
 function useFetch<T>(
   config: AxiosRequestConfig,
-  options?: Partial<UndefinedInitialDataInfiniteOptions<any, any, any, any, any>>,
+  options?: Partial<UndefinedInitialDataInfiniteOptions<any, any, any, any, any>>
 ) {
   return useInfiniteQuery({
     ...options,
